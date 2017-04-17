@@ -63,4 +63,6 @@ public class LifeCircleActivityTest {
                         .create().restoreInstanceState(b).get();
         assertTrue(reCreateAc.tvDisplay.getText().equals("Haha"));
     }
+
+
 }
