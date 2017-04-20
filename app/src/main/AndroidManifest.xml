@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SecondActivity" />
-        <activity android:name=".LifeCircleActivity"></activity>
+        <activity android:name=".LifeCircleActivity" />
+        <activity android:name=".dagger.LoginActivity"></activity>
     </application>
 
 </manifest>

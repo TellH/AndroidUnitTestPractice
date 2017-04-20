@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.atLeast;
@@ -24,9 +25,10 @@ import static org.mockito.Mockito.when;
  * Created by tlh on 2017/4/17 :)
  */
 public class MockitoTest {
+    // 验证方法是否被调用
     @Test
     public void verifyMethodCalls() {
-        List mockedList = mock(List.class);
+        List mockedList = mock(List.class); // 要求List有默认的构造方法
         mockedList.add("one");
         mockedList.clear();
         mockedList.clear();
@@ -59,5 +61,18 @@ public class MockitoTest {
         doNothing().when(mockedList).add("doNothing");
         doCallRealMethod().when(mockedList).add("doReal");
         doThrow(Exception.class).when(mockedList).add("doThrow");
+    }
+
+    // Spy与mock的唯一区别就是默认行为不一样：
+    // spy对象的方法默认调用真实的逻辑，mock对象的方法默认什么都不做，或直接返回默认值。
+    @Test
+    public void spy() {
+        List spyList = Mockito.spy(ArrayList.class);
+        spyList.add("abc");
+        Assert.assertEquals(spyList.get(0), "abc");
+
+        List mockedList = Mockito.mock(ArrayList.class);
+        mockedList.add("abc"); // 没有调用真正逻辑，没能添加元素
+        Assert.assertNull(mockedList.get(0));
     }
 }
