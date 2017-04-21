@@ -5,15 +5,19 @@ import android.content.Context;
 import com.tellh.unittestpractice.BuildConfig;
 import com.tellh.unittestpractice.rule.ContextRule;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowToast;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
@@ -41,6 +45,9 @@ public class LoginActivityLoginDaggerTest {
     @Mock
     LoginPresenter presenter;
 
+    @Captor
+    ArgumentCaptor<LoginPresenter.LoginCallback> mLoginCallbackCaptor;
+
     @Test
     public void testOnClick() {
         AppModule appModule = Mockito.spy(new AppModule(RuntimeEnvironment.application));
@@ -52,7 +59,11 @@ public class LoginActivityLoginDaggerTest {
         loginActivity.edtUsername.setText("TellH");
         loginActivity.edtPassword.setText("a123456");
         loginActivity.btnLogin.performClick();
-        Mockito.verify(mockedPresenter).login(eq("TellH"), eq("a123456"), any(LoginPresenter.LoginCallback.class));
+        Mockito.verify(mockedPresenter).login(eq("TellH"), eq("a123456"), mLoginCallbackCaptor.capture());
+        // Callback is captured and invoked the callback method;
+        mLoginCallbackCaptor.getValue().onSuccess();
+        // verify Toast test
+        Assert.assertTrue(ShadowToast.getTextOfLatestToast().equals("登录成功"));
     }
 
     @Test
